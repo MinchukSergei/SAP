@@ -6,7 +6,9 @@ last_word_regex = re.compile(r'\b(\w+)\b[.,:;-?!\'"]*$')
 first_word_regex = re.compile(r'^[.,:;-?!\'"]*\b(\w+)\b')
 
 
-def substring(s, pos, length):
+def substring(s, pos=0, length=None):
+    if length is None:
+        length = len(s)
     return '' if length <= 0 else s[pos] + substring(s, pos + 1, length - 1)
 
 
@@ -35,7 +37,7 @@ def word_replace(s, replace, word):
 
 def sentence_reverse(s1):
     word_match = word_regex.search(s1)
-    return s1 if not word_match else sentence_reverse(s1[word_match.end():]).strip() + ' ' + s1[word_match.start(): word_match.end()]
+    return s1.strip() if not word_match else sentence_reverse(s1[word_match.end():] + ' ') + s1[word_match.start(): word_match.end()]
 
 
 def word_includes_count(text, word):
@@ -78,6 +80,8 @@ def swap_first_last(s, start=0, end=None):
 
 def main():
     print('Test substring function:')
+    print(substring('hello world'))
+    print(substring('hello world', 0, 5))
     print(substring('hello world', 6, 5))
     print('=' * 25)
 
@@ -93,14 +97,17 @@ def main():
 
     print('Test word_count function:')
     print(word_replace('hello word, big word', 'word', 'world'))
+    print(word_replace('hello word, big word', 'hi', 'world'))
     print('=' * 25)
 
     print('Test sentence_reverse function:')
     print(sentence_reverse('hello python world'))
+    print(sentence_reverse('world'))
     print('=' * 25)
 
     print('Test word_includes_count function:')
     print(word_includes_count('hello helloworld world', 'hello'))
+    print(word_includes_count('hello helloworld world', 'world'))
     print('=' * 25)
 
     print('Test sentence_intersects function:')
@@ -110,10 +117,12 @@ def main():
 
     print('Test word_length function:')
     print(word_length('!hello!'))
+    print(word_length('.,!'))
     print('=' * 25)
 
     print('Test swap_first_last function:')
     print(swap_first_last('python world of Hello'))
+    print(swap_first_last('big world'))
     print('=' * 25)
 
 
